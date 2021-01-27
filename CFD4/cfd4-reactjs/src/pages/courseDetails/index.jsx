@@ -1,299 +1,252 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import HeaderContent from "../../components/headercontent";
-import FooterContent from "../../components/footercontent";
-import Section from "../../components/section";
-import CourseItem from "../../components/courseItem";
+import { useRouteMatch } from "react-router-dom";
+import CourseItem from "../../atom/courseItem";
+import LoadingApi from "../../atom/LoadingApi";
+import pageApi from "../../core/API/pageApi";
+
 export default function CourseDetails() {
+  //GET Data
+  let [dataCourse, setDataCourse] = useState();
+  let [dataCourseRelate, setDataCourseRelate] = useState();
+
+  let routerMatch = useRouteMatch();
+
+  useEffect(() => {
+    Promise.all([
+      pageApi.courseDetail(routerMatch.params.slug),
+      pageApi.courseReLate(routerMatch.params.slug),
+    ]).then((res) => {
+      console.log(res, "res");
+      setDataCourse(res[0].data);
+      setDataCourseRelate(res[1].data);
+    });
+  }, []);
+
+  if (!dataCourse) return <LoadingApi>Khoá học đang loading..</LoadingApi>;
+
+  const {
+    title,
+    opening_time,
+    count_video,
+    long_description,
+    schedule,
+    teacher,
+    content,
+    required,
+    benefits,
+  } = dataCourse;
   return (
-    <>
-      <HeaderContent />
-      <main>
-        {/* Banner  */}
-        <div className="banner__course">
-          <div className="banner__course--inner">
-            <h2>Thực chiến</h2>
-            <h2>Front-End Căn Bản</h2>
-            <div className="banner__course--info">
-              <p className="info">
-                {" "}
-                <span>Khai giảng:</span> 12/10/2020
-              </p>
-              <p className="info">
-                {" "}
-                <span>Thời lượng:</span> 18 buổi
-              </p>
+    <main className="course-detail" id="main">
+      <section className="banner style2" style={{ "--background": "#cde6fb" }}>
+        <div className="container">
+          <div className="info">
+            <h1>{title}</h1>
+            <div className="row">
+              <div className="date">
+                <strong>Khai giảng:</strong> {opening_time}
+              </div>
+              <div className="time">
+                <strong>Thời lượng:</strong> {count_video}
+              </div>
             </div>
-            <a href="/#" className="btn btn-round">
-              Đăng ký
-            </a>
-          </div>
-          <div className="inner__bottom">
-            <div className="video">
-              <img src="/img/play.svg" alt="" />
-              <span>Video giới thiệu</span>
+            <div
+              className="btn white round"
+              style={{ "--color-btn": "#70b6f1" }}
+            >
+              đăng ký
             </div>
-            <div className="price">4.000.000 VND</div>
           </div>
         </div>
-
-        {/* Course Content  */}
-        <section className="content__course">
+        <div className="bottom">
           <div className="container">
-            <div className="info__teach">
-              Many Laravel apps don’t warrant the complexity of a full front-end
-              framework like Vue or React. In this series, we’ll walk through a
-              handful of simple ways to add dynamic functionality to your apps.
+            <div className="video">
+              <div className="icon">
+                <img src="/img/play-icon-white.png" alt="" />
+              </div>{" "}
+              <span>giới thiệu</span>
             </div>
-            <div className="info__video">
-              <h2 className="title">giới thiệu về khóa học</h2>
-              <div
-                className="video"
-                style={{ backgroundImage: "url(/img/video.jpg)" }}
-              >
-                <div className="btn-play">
-                  <svg
-                    width={70}
-                    height={70}
-                    viewBox="0 0 79 78"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <ellipse
-                      cx="39.4761"
-                      cy="38.9106"
-                      rx="39.4673"
-                      ry="38.8686"
-                      fill="#F4F7F6"
-                    />
-                    <path
-                      d="M49.3438 39.2343L35.0369 47.3691V31.0995L49.3438 39.2343Z"
-                      fill="#49C5B6"
-                    />
-                  </svg>
-                </div>
+            <div className="money">4.000.000 VND</div>
+          </div>
+        </div>
+      </section>
+      <section className="section-2">
+        <div className="container">
+          <p className="des">{long_description}</p>
+          <h2 className="title">giới thiệu về khóa học</h2>
+          <div className="cover">
+            <img src="/img/course-detail-img.png" alt="" />
+          </div>
+          <h3 className="title">nội dung khóa học</h3>
+
+          {/* Content  */}
+          {content.map((ele, index) => (
+            <div className="accordion" key={index}>
+              <div className="accordion__title">
+                <div className="date">Ngày {index + 1}</div>
+                <h3>{ele.title}</h3>
               </div>
+              <div className="content">{ele.content}</div>
             </div>
-            <div className="info__course">
-              <h2 className="title">nội dung khóa học</h2>
-              <div className="item__course">
-                <div className="item__course--tt">
-                  <span className="day">Ngày 1</span>
-                  <span className="details">Giới thiệu HTML, SEO, BEM.</span>
-                </div>
-                <div className="item__course--dropdown">
-                  I'd like to demonstrate a powerful little pattern called
-                  “Server-Fetched Partials” that offers some tangible benefits
-                  over alternatives like VueJS for simple page interactions.
-                </div>
+          ))}
+
+          <h3 className="title">yêu cầu cần có</h3>
+          <div className="row row-check">
+            {/* Required  */}
+            {required.map((ele, index) => (
+              <div className="col-md-6" key={index}>
+                {ele.content}
               </div>
-              <div className="item__course">
-                <div className="item__course--tt">
-                  <span className="day">Ngày 2</span>
-                  <span className="details">CSS, CSS3, Flexbox, Grid</span>
-                </div>
-                <div className="item__course--dropdown">
-                  I'd like to demonstrate a powerful little pattern called
-                  “Server-Fetched Partials” that offers some tangible benefits
-                  over alternatives like VueJS for simple page interactions.
-                </div>
+            ))}
+          </div>
+
+          <h3 className="title">hình thức học</h3>
+          <div className="row row-check">
+            {benefits.map((ele, index) => (
+              <div className="col-md-6" key={index}>
+                {ele.content}
               </div>
-              <div className="item__course">
-                <div className="item__course--tt">
-                  <span className="day">Ngày 3</span>
-                  <span className="details">Media Queries</span>
-                </div>
-                <div className="item__course--dropdown">
-                  I'd like to demonstrate a powerful little pattern called
-                  “Server-Fetched Partials” that offers some tangible benefits
-                  over alternatives like VueJS for simple page interactions.
-                </div>
-              </div>
-              <div className="item__course">
-                <div className="item__course--tt">
-                  <span className="day">Ngày 4</span>
-                  <span className="details">Boostrap 4</span>
-                </div>
-                <div className="item__course--dropdown">
-                  I'd like to demonstrate a powerful little pattern called
-                  “Server-Fetched Partials” that offers some tangible benefits
-                  over alternatives like VueJS for simple page interactions.
-                </div>
-              </div>
-              <div className="item__course">
-                <div className="item__course--tt">
-                  <span className="day">Ngày 5</span>
-                  <span className="details">
-                    Thực hành dự án website Landing Page
-                  </span>
-                </div>
-                <div className="item__course--dropdown">
-                  I'd like to demonstrate a powerful little pattern called
-                  “Server-Fetched Partials” that offers some tangible benefits
-                  over alternatives like VueJS for simple page interactions.
-                </div>
-              </div>
-              <div className="item__course">
-                <div className="item__course--tt">
-                  <span className="day">Ngày 6</span>
-                  <span className="details">
-                    Cài đặt Grunt và cấu trúc thư mục dự án
-                  </span>
-                </div>
-                <div className="item__course--dropdown">
-                  I'd like to demonstrate a powerful little pattern called
-                  “Server-Fetched Partials” that offers some tangible benefits
-                  over alternatives like VueJS for simple page interactions.
-                </div>
-              </div>
+            ))}
+          </div>
+          <h3 className="title">
+            <div className="date-start">lịch học</div>
+            <div className="sub">
+              *Lịch học và thời gian có thể thống nhất lại theo số đông học
+              viên.
             </div>
-            <div className="required">
-              <h2 className="title">yêu cầu cần có</h2>
-              <div className="row row-check">
-                <div className="col-md-6">Đã từng học qua HTML, CSS</div>
-                <div className="col-md-6">
-                  Cài đặt phần mềm Photoshop, Adobe illustrator, Skype
-                </div>
-              </div>
-              <h2 className="title">hình thức học</h2>
-              <div className="row row-check">
-                <div className="col-md-6">
-                  Học offline tại văn phòng, cùng Trần Nghĩa và 3 đồng nghiệp.
-                </div>
-                <div className="col-md-6">
-                  Dạy và thực hành thêm bài tập online thông qua Skype.
-                </div>
-                <div className="col-md-6">
-                  Được các mentor và các bạn trong team CFD hổ trợ thông qua
-                  group CFD Facebook hoặc phần mềm điều kiển máy tính.
-                </div>
-                <div className="col-md-6">
-                  Thực hành 2 dự án thực tế với sự hướng dẫn của CFD Team.
-                </div>
-              </div>
-            </div>
-            <div className="date-study">
-              <h2 className="title">
-                lịch học
-                <span>
-                  *Lịch học và thời gian có thể thống nhất lại theo số động học
-                  viên.
-                </span>
-              </h2>
-              <p>
-                <strong>Ngày bắt đầu: </strong> 23/11/2020 <br />
-                <strong>Thời gian học: </strong> Thứ 2, Thứ 4, Thứ 6 từ
-                18h45-21h45
-              </p>
-            </div>
+          </h3>
+          <p>
+            <strong>Ngày bắt đầu: </strong> {opening_time} <br />
+            <strong>Thời gian học: </strong> {schedule}
+          </p>
+
+          {/* Teacher  */}
+          <h3 className="title">Người dạy</h3>
+          <div className="teaches">
             <div className="teacher">
-              <h2 className="title">Người dạy</h2>
-              <div className="teacher__info">
-                <div className="avatar">
-                  <img src="/img/avt1.jpg" alt="" />
-                </div>
+              <div className="avatar">
+                <img src={teacher.avatar.link} alt="" />
+              </div>
+              <div className="info">
+                <div className="name">{teacher.title}</div>
+                <div className="title">{teacher.position}</div>
+                <p className="intro">{teacher.description}</p>
+                <p>
+                  <strong>Website:</strong> <a href="/#">{teacher.website}</a>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="bottom">
+            <div className="user">
+              <img src="/img/user-group-icon.png" alt="" /> 12 bạn đã đăng ký
+            </div>
+            <div className="btn main btn-register round">đăng ký</div>
+            <div className="btn-share btn overlay round btn-icon">
+              <img src="/img/facebook.svg" alt="" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-3">
+        <div className="container">
+          <div className="textbox">
+            <h3 className="sub-title">DỰ ÁN</h3>
+            <h2 className="main-title">THÀNH VIÊN</h2>
+          </div>
+          <div className="list row">
+            <div className="col-md-4 course">
+              <div className="wrap">
+                <a href="/#" className="cover">
+                  <img src="/img/img.png" alt="" />
+                </a>
                 <div className="info">
-                  <div className="name">TRẦN NGHĨA</div>
-                  <div className="title">
-                    Founder CFD &amp; Creative Front-End Developer
+                  <a className="name" href="/#">
+                    React JS
+                  </a>
+                  <p className="des">
+                    One of the best corporate fashion brands in Sydney
+                  </p>
+                </div>
+                <div className="bottom">
+                  <div className="teacher">
+                    <div className="avatar">
+                      <img src="/img/avt.png" alt="" />
+                    </div>
+                    <div className="name">Vương Đặng</div>
                   </div>
-                  <div className="intro">
-                    My education, career, and even personal life have been
-                    molded by one simple principle; well designed information
-                    resonates with people and can change lives.I have a passion
-                    for making information resonate. It all starts with how
-                    people think. With how humans work. As humans we have
-                    learned how to read and write and while that is incredible,
-                    we are also already hard-wired to do some things a bit more
-                    "automatically"
-                  </div>
-                  <div className="website">
-                    <strong>Website:</strong> http://nghiatran.info
-                  </div>
+                  <div className="register-btn">Đăng Ký</div>
                 </div>
               </div>
             </div>
-            <div className="action">
-              <div className="action-wrap">
-                <div className="member">
-                  <img src="/img/customer.svg" alt="" />
-                  <span>12 bạn đã đăng ký</span>
+            <div className="col-md-4 course">
+              <div className="wrap">
+                <a href="/#" className="cover">
+                  <img src="/img/img2.png" alt="" />
+                </a>
+                <div className="info">
+                  <a className="name" href="/#">
+                    Animation
+                  </a>
+                  <p className="des">
+                    One of the best corporate fashion brands in Sydney
+                  </p>
                 </div>
-                <div className="btn btn-round">đăng ký</div>
+                <div className="bottom">
+                  <div className="teacher">
+                    <div className="avatar">
+                      <img src="/img/avt.png" alt="" />
+                    </div>
+                    <div className="name">Trần Nghĩa</div>
+                  </div>
+                  <div className="register-btn">Đăng Ký</div>
+                </div>
               </div>
-              <div className="btn btn-continue btn-share">
-                <img src="/img/facebook-app-symbol.svg" alt="" />
-                <span>Chia sẻ</span>
+            </div>
+            <div className="col-md-4 course">
+              <div className="wrap">
+                <a href="/#" className="cover">
+                  <img src="/img/img3.png" alt="" />
+                </a>
+                <div className="info">
+                  <a className="name" href="/#">
+                    Scss, Grunt JS và Boostrap 4
+                  </a>
+                  <p className="des">
+                    One of the best corporate fashion brands in Sydney
+                  </p>
+                </div>
+                <div className="bottom">
+                  <div className="teacher">
+                    <div className="avatar">
+                      <img src="/img/avt.png" alt="" />
+                    </div>
+                    <div className="name">Trần Nghĩa</div>
+                  </div>
+                  <div className="register-btn">Đăng Ký</div>
+                </div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <Section title="Dự án" type="học viên">
-          <div className="row">
-            <CourseItem
-              imageAlt="alter"
-              imageUrl="/img/img-7.jpg"
-              title="Furnitown"
-              des="One of the best corporate fashion brands in Sydney"
-              avatarAlt=""
-              avatarImageUrl="/img/avt.png"
-              name="Trần Nghĩa"
-            />
-            <CourseItem
-              imageAlt="alter"
-              imageUrl="/img/img-8.jpg"
-              title="GboxMB"
-              des="One of the best corporate fashion brands in Sydney"
-              avatarAlt=""
-              avatarImageUrl="/img/avt.png"
-              name="Trần Nghĩa"
-            />
-            <CourseItem
-              imageAlt="alter"
-              imageUrl="/img/img-9.jpg"
-              title="Kymco"
-              des="One of the best corporate fashion brands in Sydney"
-              avatarAlt=""
-              avatarImageUrl="/img/avt.png"
-              name="Trần Nghĩa"
-            />
+      {/* Courses Relate  */}
+      <section className="section-4">
+        <div className="container">
+          <div className="textbox">
+            <h3 className="sub-title">Khóa học</h3>
+            <h2 className="main-title">Liên quan</h2>
           </div>
-        </Section>
-
-        <Section title="Khoá học" type="Liên quan" className="related">
-          <div className="row">
-            <CourseItem
-              imageAlt="alter"
-              imageUrl="/img/img-7.jpg"
-              title="Furnitown"
-              des="One of the best corporate fashion brands in Sydney"
-              avatarAlt=""
-              avatarImageUrl="/img/avt.png"
-              name="Trần Nghĩa"
-            />
-            <CourseItem
-              imageAlt="alter"
-              imageUrl="/img/img-8.jpg"
-              title="GboxMB"
-              des="One of the best corporate fashion brands in Sydney"
-              avatarAlt=""
-              avatarImageUrl="/img/avt.png"
-              name="Trần Nghĩa"
-            />
-            <CourseItem
-              imageAlt="alter"
-              imageUrl="/img/img-9.jpg"
-              title="Kymco"
-              des="One of the best corporate fashion brands in Sydney"
-              avatarAlt=""
-              avatarImageUrl="/img/avt.png"
-              name="Trần Nghĩa"
-            />
+          <div className="list row">
+            {dataCourseRelate &&
+              dataCourseRelate.map((ele, index) => (
+                <CourseItem {...ele} key={index} />
+              ))}
           </div>
-        </Section>
-      </main>
-      <FooterContent />
-    </>
+        </div>
+      </section>
+    </main>
   );
 }
