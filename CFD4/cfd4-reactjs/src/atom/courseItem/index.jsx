@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function CourseItem({
   thumbnail,
-  badge,
-  badgeClass,
+  course_status,
   user,
   heart,
   share,
@@ -13,12 +12,37 @@ export default function CourseItem({
   short_description,
   teacher,
 }) {
+  let [badge, setBadge] = useState();
+  let [badgeColor, setBadgeColor] = useState();
+
+  useEffect(() => {
+    switch (course_status) {
+      case "sap-khai-gian":
+        setBadge("Sắp khai giảng");
+        setBadgeColor("#5a46ff");
+        break;
+      case "dang-dien-ra":
+        setBadge("Đang diễn ra");
+        setBadgeColor("#f4744b");
+        break;
+      case "da-ket-thuc":
+        setBadge("Đã kết thúc");
+        setBadgeColor("#797979");
+        break;
+
+      default:
+        break;
+    }
+  }, []);
+
   return (
     <div className="col-md-4 course">
       <div className="wrap">
         <Link className="cover" to={`/course/${slug}`}>
           <img src={thumbnail?.link || ""} alt={title} />
-          <span className={`badge ${badgeClass}`}>{badge}</span>
+          <span className={`badge b1`} style={{ background: `${badgeColor}` }}>
+            {badge}
+          </span>
           <div className="hover">
             <div className="top">
               <div className="user">

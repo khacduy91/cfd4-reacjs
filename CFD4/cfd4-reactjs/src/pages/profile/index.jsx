@@ -9,6 +9,7 @@ import Project from "./component/project";
 
 export default function Profile() {
   let auth = useAuth();
+
   return (
     <main className="profile" id="main">
       <section>

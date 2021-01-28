@@ -115,13 +115,9 @@ function PopupLogin(props, ref) {
 
               <p>Nhớ mật khẩu</p>
             </label>
-            <a
-              href="javascript:void(0)"
-              className="forget"
-              onClick={appContext.openPopupRegister}
-            >
+            <button className="forget" onClick={appContext.openPopupRegister}>
               Đăng ký
-            </a>
+            </button>
           </div>
           <div
             className="btn rect main btn-login"

@@ -23,6 +23,36 @@ export default function CourseDetails() {
     });
   }, []);
 
+  //JS
+  useEffect(() => {
+    function coursePage() {
+      let $ = window.$;
+      function courseDetailAccordion() {
+        $(".accordion .accordion__title").on("click", function (e) {
+          e.preventDefault();
+          // $(this).closest('.accordion').siblings('.active').removeClass('active')
+          $(this).next().stop().slideToggle(200);
+
+          let $accordion = $(this).closest(".accordion");
+          if ($accordion.hasClass("active")) {
+            $accordion.removeClass("active");
+          } else {
+            $accordion.addClass("active");
+          }
+          $(this)
+            .closest(".accordion")
+            .siblings(".active")
+            .removeClass("active")
+            .find(".content")
+            .stop()
+            .slideUp(200);
+        });
+      }
+      courseDetailAccordion();
+    }
+    setTimeout(coursePage, 100);
+  }, []);
+
   if (!dataCourse) return <LoadingApi>Khoá học đang loading..</LoadingApi>;
 
   const {
@@ -38,7 +68,7 @@ export default function CourseDetails() {
   } = dataCourse;
   return (
     <main className="course-detail" id="main">
-      <section className="banner style2" style={{ "--background": "#cde6fb" }}>
+      <section className="banner style2" style={{ background: "#cde6fb" }}>
         <div className="container">
           <div className="info">
             <h1>{title}</h1>

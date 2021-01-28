@@ -1,19 +1,18 @@
 import React from "react";
 
-export default function FormField(props) {
-  const {
-    label,
-    required,
-    type,
-    name,
-    placeholder,
-    style,
-    onChange,
-    errorMsg,
-    errorStyle,
-    disabled,
-  } = props;
-
+export default function FormField({
+  label = 0,
+  required,
+  type,
+  name,
+  placeholder,
+  style,
+  onChange,
+  errorMsg,
+  errorStyle,
+  disabled,
+  defaultValue,
+}) {
   return (
     <>
       <label>
@@ -29,6 +28,8 @@ export default function FormField(props) {
           style={style}
           onChange={onChange}
           disabled={disabled}
+          defaultValue={defaultValue}
+          // value={defaultValue}
         />
       </label>
       <span style={errorStyle}>{errorMsg}</span>

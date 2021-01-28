@@ -7,6 +7,24 @@ import { useAuth } from "../../../../hook/useAuth";
 import useFormValidate from "../../../../hook/useFormValidate";
 
 export default function Info() {
+  //Get data
+
+  let [dataInfo, setDataInfo] = useState();
+  useEffect(
+    () =>
+      userApi.getDataProfile().then((res) => {
+        console.log(res, "a");
+        if (res) {
+          setDataInfo(res);
+        } else if (res) {
+          setDataInfo("K tim thay thong tin ng dung");
+          console.log(res);
+        }
+      }),
+    []
+  );
+
+  //Chang info
   let { form, inputChange, error, submit } = useFormValidate(
     {
       name: "",
@@ -44,10 +62,11 @@ export default function Info() {
 
   let [message, setMessage] = useState();
   let auth = useAuth();
+
   async function _btnClick(e) {
     e.preventDefault();
-    console.log(form, "form");
 
+    console.log(form);
     let error = submit();
     if (Object.keys(error).length === 0) {
       userApi.updateProfile(form).then((res) => {
@@ -55,30 +74,12 @@ export default function Info() {
 
         if (res.data) {
           setMessage("Bạn đã cập nhật thông tin tài khoản thành công");
-          auth.loginAction(res.data);
+          window.location.reload();
           clearInput("profile_Info");
         }
       });
     }
   }
-
-  //Get data
-
-  let [dataInfo, setDataInfo] = useState();
-  useEffect(
-    () =>
-      userApi.getDataProfile().then((res) => {
-        console.log(res, "a");
-        if (res) {
-          setDataInfo(res);
-          console.log(res, "a");
-        } else if (res) {
-          setDataInfo("K tim thay thong tin ng dung");
-          console.log(res);
-        }
-      }),
-    []
-  );
 
   if (!dataInfo) return <LoadingApi>Thong tin tk dang dc load</LoadingApi>;
 
@@ -91,9 +92,8 @@ export default function Info() {
         label="Họ và Tên"
         type="text"
         name="name"
-        placeholder={dataInfo.name}
+        defaultValue={dataInfo.name}
         required
-        value={form.name}
         onChange={(e) => inputChange(e)}
         errorMsg={error.name}
       />
@@ -101,7 +101,7 @@ export default function Info() {
         label="Số điện thoại"
         type="text"
         name="phone"
-        placeholder={dataInfo.phone}
+        defaultValue={dataInfo.phone}
         required
         onChange={(e) => inputChange(e)}
         errorMsg={error.phone}
@@ -110,7 +110,7 @@ export default function Info() {
         label="Email"
         type="text"
         // name="email"
-        placeholder={dataInfo.email}
+        defaultValue={dataInfo.email}
         required
         // onChange={(e) => inputChange(e)}
         errorMsg={error.email}
@@ -120,7 +120,7 @@ export default function Info() {
         label="Facebook"
         type="text"
         name="fb"
-        placeholder={dataInfo.fb}
+        defaultValue={dataInfo.fb}
         required
         onChange={(e) => inputChange(e)}
         errorMsg={error.facebook}
@@ -129,7 +129,8 @@ export default function Info() {
         label="Skype"
         type="text"
         name="skype"
-        placeholder={dataInfo.skype}
+        defaultValue={dataInfo.skype}
+        value={dataInfo.skype}
         required
         onChange={(e) => inputChange(e)}
         errorMsg={error.website}

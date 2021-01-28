@@ -54,9 +54,41 @@ const userApi = {
       },
     }).then((res) => res.json());
   },
+
   getDataCourse: () => {
     let user = JSON.parse(localStorage.getItem("login"));
     return fetch(`${domain}/elearning/v4/profile/course`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token.accessToken}`,
+      },
+    }).then((res) => res.json());
+  },
+
+  getDataProject: () => {
+    let user = JSON.parse(localStorage.getItem("login"));
+    return fetch(`${domain}/elearning/v4/profile/project`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token.accessToken}`,
+      },
+    }).then((res) => res.json());
+  },
+  getDataCoin: () => {
+    let user = JSON.parse(localStorage.getItem("login"));
+    return fetch(`${domain}/elearning/v4/profile/coint`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token.accessToken}`,
+      },
+    }).then((res) => res.json());
+  },
+  getDataPayment: () => {
+    let user = JSON.parse(localStorage.getItem("login"));
+    return fetch(`${domain}/elearning/v4/profile/payment`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

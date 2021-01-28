@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import LoadingApi from "../../../../atom/LoadingApi";
 import userApi from "../../../../core/API/userApi";
 import milisec_to_date from "../../../../core/milisec_to_date";
+import Process from "./Process";
 
 export default function Course() {
   //Get Data
@@ -19,13 +20,13 @@ export default function Course() {
     []
   );
 
-  milisec_to_date("2021-01-27", "yyyy-mm-dd");
-
   if (!dataCourse)
     return <LoadingApi>Các Khoá Học đang Loadding...</LoadingApi>;
 
   if (dataCourse === "Bạn chưa đăng ký khoá học nào")
     return <LoadingApi>Bạn chưa đăng ký khoá học nào...</LoadingApi>;
+
+  console.log("render..");
 
   return (
     <div className="tab2">
@@ -42,25 +43,23 @@ export default function Course() {
               Khai giảng ngày {ele.course.opening_time}
             </div>
             <div className="row">
-              <div className>
+              <div>
                 <img src="/img/clock.svg" alt="" className="icon" />
                 54 giờ
               </div>
-              <div className>
+              <div>
                 <img src="/img/play.svg" alt="" className="icon" />
                 {ele.course.count_video} video
               </div>
-              <div className>
+              <div>
                 <img src="/img/user.svg" alt="" className="icon" />
                 20 học viên
               </div>
             </div>
-            <div className="process">
-              <div className="line">
-                <div className="rate" style={{ width: "30%" }} />
-              </div>
-              30%
-            </div>
+            <Process
+              opening_time={ele.course.opening_time}
+              count_video={ele.course.count_video}
+            />
             <div className="btn overlay round btn-continue">Tiếp tục học</div>
           </div>
         </div>

@@ -1,6 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import LoadingApi from "../../../../atom/LoadingApi";
+import userApi from "../../../../core/API/userApi";
 
 export default function Coin() {
+  let [dataCoin, setDataCoin] = useState();
+  useEffect(
+    () =>
+      userApi.getDataCoin().then((res) => {
+        console.log(res, "a");
+        if (res) {
+          setDataCoin(res);
+        } else if (res) {
+          setDataCoin("K tim thay thong tin ng dung");
+          console.log(res);
+        }
+      }),
+    []
+  );
+
+  if (!dataCoin) return <LoadingApi>Thong tin tk dang dc load</LoadingApi>;
+
+  if (dataCoin === "K tim thay thong tin ng dung")
+    return <LoadingApi>K tim thay thong tin ng dung</LoadingApi>;
+
   return (
     <div className="tab5 cointab">
       <div className="coininfo">
@@ -56,9 +78,7 @@ export default function Coin() {
               <i>*Bạn có thể đổi COIN 1 lần</i>
             </small>
           </div>
-          <a href="/javascript:void(0)" className="btn main">
-            Đổi COIN
-          </a>
+          <button className="btn main">Đổi COIN</button>
         </div>
       </div>
       <div className="coinhistory">

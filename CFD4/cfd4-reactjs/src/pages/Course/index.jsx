@@ -13,6 +13,7 @@ export default function Course() {
       }),
     []
   );
+
   if (!dataCourses) return <LoadingApi>Trang khoá học đang loading</LoadingApi>;
   return (
     <main className="homepage" id="main">
